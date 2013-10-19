@@ -101,36 +101,51 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
 
             var cols = [{"id":"date","label":"date","type":"string"}];
             var rows = [];
-            var i = 0;
+            var order = ["date"];
+
             for (var col in $scope.graphData) {
 
-                i++;
                 var element = $scope.graphData[col];
-                var obj = {
-                            "c": [
-                              {
-                                "v": col
-                              }
-                            ]
-                          };
-                rows.push()
-                
                 var ref = null;
 
                 for (var index = element.length - 1; index >= 0; index--) {
                     ref = element[index];
-            
-                    if (i == 1) {
-                        cols.push({"id":ref.referal,"label":ref.referal,"type":"number"});
+                    var indexOrder = order.indexOf(ref.referal);
+                    if (indexOrder == -1) {
+                        order.push(ref.referal);
+                        indexOrder = order.indexOf(ref.referal);
+                        cols[indexOrder] = {"id":ref.referal,"label":ref.referal,"type":"number"};
                     };
-                    
-                    obj.c.push({"v":ref.link_clicks_count});
                 };
-                
-                rows.push(obj);
             }
 
             graphData.data.cols = cols;
+
+            for (var col in $scope.graphData) {
+
+                var element = $scope.graphData[col];
+                var ref = null;
+                var object = {
+                            "c": [
+                              {
+                                "f": col
+                              }]
+                          };
+
+                for (var i = order.length - 1; i > 0; i--) {
+                    object.c.push({"v":0});
+                };
+
+                for (var index = element.length - 1; index >= 0; index--) {
+                    ref = element[index];
+                    var indexOrder = order.indexOf(ref.referal);
+
+                    object.c[indexOrder] = {"v":ref.link_clicks_count};
+                };
+
+                rows.push(object);
+            }
+
             graphData.data.rows = rows;
 
             return graphData;
@@ -139,8 +154,9 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
 
     /**************************** Dummy Data **************************/
 
-        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links'}).
+        $http({method: 'GET', url: 'http://127.0.0.1:3000/api/app_links'}).
           success(function(data, status, headers, config) {
+
             $scope.referers = data;
             $scope.table = createTableData();
         }).
@@ -148,8 +164,9 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     
         });
 
-        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links/clicks'}).
+        $http({method: 'GET', url: 'http://127.0.0.1:3000/api/app_links/clicks'}).
           success(function(data, status, headers, config) {
+            console.log(JSON.stringify(data));
             $scope.graphData = data;
             $scope.graph = createGraphData();
         }).
