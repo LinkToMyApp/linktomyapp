@@ -1,15 +1,17 @@
 <div class="row">
-    <div class="span3" ng-controller="LeftmenuCtrl">
+    <div class="span3" id="left-panel" ng-controller="LeftmenuCtrl">
         <ul class="unstyled center">
-            <li>All</li>
+            <li><img ng-src="{{app_icon}}"></li>
         </ul>
-        <ul class="menu unstyled center" ng-repeat="referer in referers">
-            <li>{{referer}}</li>
-        </ul>
+        <div class="center">
+        <br />
+            Link : <a ng-href="{{app_link}}">{{app_link}}</a>
+        </div>
+
     </div>
-    <div class="span9">
-        <div google-chart chart="chart" style="{{chart.cssStyle}}" on-ready="chartReady()" />
-        <div google-chart chart="chart2" style="{{chart.cssStyle}}" on-ready="chartReady()" />
+    <div class="span9" id="main-content">
+        <div google-chart chart="table" style="{{chart.cssStyle}}" on-ready="chartReady()" />
+        <div google-chart chart="graph" style="{{chart.cssStyle}}" on-ready="chartReady()" />
     </div>
 </div>
 

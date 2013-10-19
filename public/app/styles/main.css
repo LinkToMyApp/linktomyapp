@@ -3,22 +3,20 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
     height: 100%;
+    background-color: #ffffff;
+}
+
+.navbar{
+    margin-bottom: 0px;
 }
 
 #left-panel{
-    background-color: #CCCCCC;
+    background-color: #fafafa;
+    padding-top: 20px;
 }
 
 #main-content{
-    background-color: #1111FF;
-}
-
-.menu{
-
-}
-
-.menu li{
-
+    background-color: #ffffff;
 }
 
 .navbar-inner{
@@ -27,9 +25,21 @@ body {
   border-radius: 0px;
 }
 
+.row{
+    background-color: #ffffff;
+}
 
 /********* Utils *********/
 
 .center{
     text-align: center;
+}
+
+/********* Ovveride **************/
+
+.google-visualization-table-table .gradient,
+.google-visualization-table-div-page .gradient {
+
+
+  background: #cccccc repeat-x left bottom;
 }
