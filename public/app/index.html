@@ -12,7 +12,7 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="styles/bootstrap.css">
+        <link rel="stylesheet" href="bower_components/bootstrap-sass/bootstrap-2.3.2.css">
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
 </head>
@@ -25,9 +25,16 @@
       <script src="bower_components/es5-shim/es5-shim.js"></script>
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
-
+    <div class="navbar navbar-inverse">
+      <div class="navbar-inner">
+        <a class="brand" href="#">LinkToMyApp</a>
+        <ul class="nav">
+          <li class="active"><a href="#">Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
     <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <div class="" ng-view=""></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
