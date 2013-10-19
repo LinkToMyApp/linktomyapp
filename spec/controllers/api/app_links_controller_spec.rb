@@ -58,4 +58,67 @@ describe Api::AppLinksController do
 			res5["link_clicks_count"].should eq(1)
 		end
 	end
+
+	describe "app_installed" do
+		before(:each) do
+			@ip_adress = "1.1.1.1"
+	      	@controller.request.stubs(:remote_ip).returns(@ip_adress)
+		end
+
+		let(:mobile_app) { FactoryGirl.create(:mobile_app, :id => 12) }
+
+		let(:app_link) { FactoryGirl.create(:app_link, :mobile_app => mobile_app) }
+
+		context "link was clicked" do
+			context "same IP address" do
+				it "returns link click id" do
+					FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
+
+					post :app_installed, :app_id => mobile_app.id, :format => :json
+
+					resp = JSON.parse(response.body)
+					resp["link_click_id"].should eq(123)
+				end
+
+				it "updates link click status" do
+					link_click = FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
+
+					post :app_installed, :app_id => mobile_app.id, :format => :json
+
+					link_click.reload.installed.should == true
+				end
+			end
+
+			context "different IP address" do
+				it "returns random unique id" do
+					SecureRandom.stubs(:hex).returns(321)
+					FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => "2.2.2.2", :app_link => app_link)
+
+					post :app_installed, :app_id => mobile_app.id, :format => :json
+
+					resp = JSON.parse(response.body)
+					resp["link_click_id"].should eq(321)
+				end
+
+				it "doesn't update the link click status" do
+					link_click = FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => "2.2.2.2", :app_link => app_link)
+
+					post :app_installed, :app_id => mobile_app.id, :format => :json
+
+					link_click.reload.installed.should == false
+				end
+			end
+		end
+
+		context "link was not clicked" do
+			it "returns random unique id" do
+				SecureRandom.stubs(:hex).returns(321)
+
+				post :app_installed, :app_id => mobile_app.id, :format => :json
+
+				resp = JSON.parse(response.body)
+				resp["link_click_id"].should eq(321)
+			end
+		end
+	end
 end
