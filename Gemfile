@@ -29,6 +29,7 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'unicorn'
 gem 'faker'
+gem "active_model_serializers"
 
 group :development, :test do
 	gem 'rspec-rails', '~> 2.0'

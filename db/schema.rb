@@ -11,18 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131019131716) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20131019160238) do
 
   create_table "app_links", force: true do |t|
     t.integer  "mobile_app_id",                      null: false
     t.string   "referal",                            null: false
-    t.integer  "clicks_counter",         default: 0, null: false
+    t.integer  "link_clicks_count",      default: 0, null: false
     t.integer  "unique_visitor_counter", default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "installs_count",         default: 0, null: false
   end
 
   add_index "app_links", ["mobile_app_id"], name: "index_app_links_on_mobile_app_id", using: :btree

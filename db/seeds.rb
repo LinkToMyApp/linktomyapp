@@ -1,3 +1,13 @@
+def rand_in_range(from, to)
+  rand * (to - from) + from
+end
+
+def rand_time(from, to=Time.now)
+  Time.at(rand_in_range(from.to_f, to.to_f))
+end
+
+
+
 puts "Create Youboox App..."
 MobileApp.destroy_all
 mobile_app = MobileApp.create(:name => "Youboox", 
@@ -19,7 +29,9 @@ puts "Done!"
 		LinkClick.create(:app_link_id => app_link.id,
 			:ip_adress => Faker::Internet.ip_v4_address,
 			:occurence_counter => rand(3),
-			:installed => [true, false].sample)
+			:installed => [true, false].sample,
+			:created_at => rand_time(7.days.ago))
 		puts "Done !"
 	end
 end
+

@@ -1,15 +1,24 @@
 Linktomyapp::Application.routes.draw do
+
+  root 'welcome#index'
+
+  namespace "api" do
+    resources :app_links do
+      collection do
+        get :clicks
+      end
+    end
+  end
+
   resources :link_clicks
 
   resources :app_links
 
   resources :mobile_apps
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
   
-  root 'welcome#index'
+
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :app_link do
     mobile_app_id 1
     referal "MyString"
-    clicks_counter 1
-    unique_visitor_counter 1
+    link_clicks_count 0
+    unique_visitor_counter 0
   end
 end
