@@ -150,7 +150,6 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
 
         $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links/clicks'}).
           success(function(data, status, headers, config) {
-            console.log(JSON.stringify(data));
             $scope.graphData = data;
             $scope.graph = createGraphData();
         }).
