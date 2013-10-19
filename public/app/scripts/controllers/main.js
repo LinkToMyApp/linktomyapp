@@ -50,13 +50,13 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
               var object = {
                             "c": [
                               {
-                                "f": element.name
+                                "f": element.referal
                               },
                               {
-                                "v": element.clicks
+                                "v": element.link_clicks_count
                               },
                               {
-                                "v": element.installs
+                                "v": element.installs_count
                               }
                             ]
                           };
@@ -69,6 +69,8 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
             return tableData;
         }
 
+    $scope.showType = "Click";
+
     function createGraphData(){
 
         var graphData = {
@@ -80,12 +82,12 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
                         "rows": []
                       },
                       "options": {
-                        "title": "Sales per month",
+                        "title": $scope.showType,
                         "isStacked": "true",
                         "fill": 20,
                         "displayExactValues": true,
                         "vAxis": {
-                          "title": "Sales unit",
+                          "title": $scope.showType,
                           "gridlines": {
                             "count": 10
                           }
@@ -97,117 +99,44 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
                       "formatters": {}
                     };
 
-            var cols = [
-                          {
-                            "id": "month",
-                            "label": "Month",
-                            "type": "string"
-                          },
-                          {
-                            "id": "laptop-id",
-                            "label": "Laptop",
-                            "type": "number"
-                          },
-                          {
-                            "id": "desktop-id",
-                            "label": "Desktop",
-                            "type": "number"
-                          },
-                          {
-                            "id": "server-id",
-                            "label": "Server",
-                            "type": "number"
-                          },
-                          {
-                            "id": "cost-id",
-                            "label": "Shipping",
-                            "type": "number"
-                          }];
+            var cols = [{"id":"date","label":"date","type":"string"}];
 
-    var rows = [
-                  {
-                    "c": [
-                      {
-                        "v": "January"
-                      },
-                      {
-                        "v": 19,
-                        "f": "42 items"
-                      },
-                      {
-                        "v": 12,
-                        "f": "Ony 12 items"
-                      },
-                      {
-                        "v": 7,
-                        "f": "7 servers"
-                      },
-                      {
-                        "v": 4
-                      }
-                    ]
-                  },
-                  {
-                    "c": [
-                      {
-                        "v": "February"
-                      },
-                      {
-                        "v": 13
-                      },
-                      {
-                        "v": 1,
-                        "f": "1 unit (Out of stock this month)"
-                      },
-                      {
-                        "v": 12
-                      },
-                      {
-                        "v": 2
-                      }
-                    ]
-                  },
-                  {
-                    "c": [
-                      {
-                        "v": "March"
-                      },
-                      {
-                        "v": 24
-                      },
-                      {
-                        "v": 5
-                      },
-                      {
-                        "v": 11
-                      },
-                      {
-                        "v": 6
-                      }
-                    ]
-                  }
-                ];
-
-            /*var length = $scope.referers.length,element = null;
+            var length = $scope.graphData.length,element = null;
             for (var i = 0; i < length; i++) {
-              element = $scope.referers[i];
+              element = $scope.graphData[i];
+
+              var object = {"id":element.date,"label":element.date,"type":"number"};
+
+                cols.push(object);
+            }
+
+
+            var rows = [];
+
+            var length = $scope.graphData.length,element = null;
+            for (var i = 0; i < length; i++) {
+              element = $scope.graphData[i];
 
               var object = {
-                            "c": [
-                              {
-                                "f": element.name
-                              },
-                              {
-                                "v": element.clicks
-                              },
-                              {
-                                "v": element.installs
-                              }
-                            ]
-                          };
-                rows.push(object);
-            }*/
+                    "c": [
+                      {
+                        "v": element.date
+                      }
+                    ]
+                  };
+                var ref = null;
+                for (var index = element.values.length - 1; index >= 0; index--) {
+                    ref = element.values[index];
+                    var value = {"v":ref.value,"f":ref.name};
+                    object.c.push(value);
+                };
 
+                //console.log(JSON.stringify(object));
+                rows.push(object);
+            }
+
+            console.log(JSON.stringify(cols));
+            console.log(JSON.stringify(rows));
             graphData.data.cols = cols;
             graphData.data.rows = rows;
 
@@ -218,17 +147,17 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     /**************************** Dummy Data **************************/
 
         $scope.referers = [
-        {
-            "name": "toto",
-            "clicks": 10,
-            "installs": 8
-        },
-        {
-            "name": "titi",
-            "clicks": 20,
-            "installs": 5
-        }
-        ];
+    {
+        "referal": "toto",
+        "link_clicks_count": 10,
+        "installs_count": 8
+    },
+    {
+        "referal": "titi",
+        "link_clicks_count": 20,
+        "installs_count": 5
+    }
+];
 
 
         $scope.graphData = [
