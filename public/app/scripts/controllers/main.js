@@ -154,7 +154,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
 
     /**************************** Dummy Data **************************/
 
-        $http({method: 'GET', url: 'http://127.0.0.1:3000/api/app_links'}).
+        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links'}).
           success(function(data, status, headers, config) {
 
             $scope.referers = data;
@@ -164,7 +164,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     
         });
 
-        $http({method: 'GET', url: 'http://127.0.0.1:3000/api/app_links/clicks'}).
+        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links/clicks'}).
           success(function(data, status, headers, config) {
             console.log(JSON.stringify(data));
             $scope.graphData = data;
