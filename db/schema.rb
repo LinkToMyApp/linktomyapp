@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20131019131716) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "app_links", force: true do |t|
     t.integer  "mobile_app_id",                      null: false
     t.string   "referal",                            null: false
