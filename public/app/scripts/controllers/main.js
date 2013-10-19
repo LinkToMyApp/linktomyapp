@@ -89,7 +89,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
                         "vAxis": {
                           "title": $scope.showType,
                           "gridlines": {
-                            "count": 10
+                            "count": 5
                           }
                         },
                         "hAxis": {
@@ -100,39 +100,34 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
                     };
 
             var cols = [{"id":"date","label":"date","type":"string"}];
-
-            var length = $scope.graphData.length,element = null;
-            for (var i = 0; i < length; i++) {
-              element = $scope.graphData[i];
-
-              var object = {"id":element.date,"label":element.date,"type":"number"};
-
-                cols.push(object);
-            }
-
-
             var rows = [];
 
             var length = $scope.graphData.length,element = null;
             for (var i = 0; i < length; i++) {
-              element = $scope.graphData[i];
 
-              var object = {
-                    "c": [
-                      {
-                        "v": element.date
-                      }
-                    ]
-                  };
+                element = $scope.graphData[i];
+                var obj = {
+                            "c": [
+                              {
+                                "v": element.date
+                              }
+                            ]
+                          };
+                rows.push()
+                
                 var ref = null;
+
                 for (var index = element.values.length - 1; index >= 0; index--) {
                     ref = element.values[index];
-                    var value = {"v":ref.value,"f":ref.name};
-                    object.c.push(value);
+            
+                    if (i == 0) {
+                        cols.push({"id":ref.name,"label":ref.name,"type":"number"});
+                    };
+                    
+                    obj.c.push({"v":ref.value});
                 };
-
-                //console.log(JSON.stringify(object));
-                rows.push(object);
+                
+                rows.push(obj);
             }
 
             console.log(JSON.stringify(cols));
@@ -147,18 +142,17 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     /**************************** Dummy Data **************************/
 
         $scope.referers = [
-    {
-        "referal": "toto",
-        "link_clicks_count": 10,
-        "installs_count": 8
-    },
-    {
-        "referal": "titi",
-        "link_clicks_count": 20,
-        "installs_count": 5
-    }
-];
-
+        {
+            "referal": "toto",
+            "link_clicks_count": 10,
+            "installs_count": 8
+        },
+        {
+            "referal": "titi",
+            "link_clicks_count": 20,
+            "installs_count": 5
+        }
+        ];
 
         $scope.graphData = [
         {
