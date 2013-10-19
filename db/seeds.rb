@@ -20,7 +20,7 @@ puts "Done!"
 	rand_click = rand(20)
 	app_link = AppLink.create(:mobile_app_id => mobile_app.id,
 		:referal => Faker::Internet.domain_name,
-		:clicks_counter => rand_click,
+		:link_clicks_count => rand_click,
 		:unique_visitor_counter => rand_click)
 	puts "Done !"
 
