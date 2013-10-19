@@ -2,19 +2,19 @@ require 'spec_helper'
 
 describe MobileApp do
 	describe "create" do
-		it "has one app link" do
+		it "has many app links" do
 			mobile_app = FactoryGirl.create(:mobile_app)
-			app_link = FactoryGirl.create(:app_link)
+			app_links = FactoryGirl.create_list(:app_link, 2)
 			
-			mobile_app.app_link = app_link
+			mobile_app.app_links = app_links
 			mobile_app.save!
 
-			MobileApp.find(mobile_app.id).app_link.should == app_link
+			MobileApp.find(mobile_app.id).app_links.should =~ app_links
 		end
 	end
 	describe "destroy" do
 		it "destroys app links" do
-			mobile_app = FactoryGirl.create(:mobile_app, :app_link => FactoryGirl.create(:app_link))
+			mobile_app = FactoryGirl.create(:mobile_app, :app_links => FactoryGirl.create_list(:app_link, 2))
 			
 			mobile_app.destroy!
 

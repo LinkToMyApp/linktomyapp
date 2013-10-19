@@ -28,12 +28,15 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 
 gem 'unicorn'
-
-gem 'rails_12factor', group: :production
+gem 'faker'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 2.0'
-  gem 'factory_girl_rails'
+	gem 'rspec-rails', '~> 2.0'
+	gem 'factory_girl_rails'
+end
+
+group :production do
+	gem 'rails_12factor'
 end
 
 group :doc do
