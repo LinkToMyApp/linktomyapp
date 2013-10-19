@@ -61,8 +61,11 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    metaclass (0.0.1)
     mime-types (1.25)
     minitest (4.7.5)
+    mocha (0.13.3)
+      metaclass (~> 0.0.1)
     multi_json (1.8.2)
     pg (0.17.0)
     polyglot (0.3.3)
@@ -151,6 +154,7 @@ DEPENDENCIES
   faker
   jbuilder (~> 1.2)
   jquery-rails
+  mocha
   pg
   rails (= 4.0.0)
   rails_12factor

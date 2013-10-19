@@ -20,7 +20,7 @@ class Api::AppLinksController < ApplicationController
 
 	def app_installed
 	    link_clicks = LinkClick.where(:installed => false, :ip_adress => request.remote_ip, :app_link_id => AppLink.where(:mobile_app_id => params[:app_id])).order("created_at DESC")
-	    
+
 	    if link_clicks.blank?
 	      link_click_id=SecureRandom.hex(8)
 	    else
@@ -29,6 +29,6 @@ class Api::AppLinksController < ApplicationController
 	      link_click_id=link_click.id
 	    end
 	    
-	    render :json => "#{link_click_id}", :status => :ok
+	    render :json => {:link_click_id => link_click_id }
 	  end
 end
