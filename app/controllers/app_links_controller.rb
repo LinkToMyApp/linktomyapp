@@ -65,9 +65,9 @@ class AppLinksController < ApplicationController
     app = MobileApp.first
     redirect_to app.itunes_url
 
-    app_link = AppLink.where(:referal => request.referrer, :mobile_app => app).first_or_create
+    app_link = AppLink.where(:referal => request.referrer.blank? ? "unknown" : request.referrer, :mobile_app => app).first_or_create
 
-    link_click = LinkClick.create(:app_link => app_link, :ip_adress => request.remote_ip)
+    link_click = LinkClick.create(:app_link => app_link, :ip_adress => request.remote_ip.blank? ? "unknown" : request.remote_ip)
     link_click.save
 
     # render text: "<a href=\"http://localhost:3000/app_links/follow\">Link</a>"
