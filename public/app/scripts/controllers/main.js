@@ -1,8 +1,7 @@
 'use strict';
 
-angular.module('linkToMyAppApp',['googlechart']).controller('MainCtrl', function ($scope) {
+angular.module('linkToMyApp').controller('MainCtrl', function ($scope) {
 
-/*
     var chart1 = {};
     chart1.type = "AreaChart";
     chart1.displayed = false;
@@ -16,10 +15,10 @@ angular.module('linkToMyAppApp',['googlechart']).controller('MainCtrl', function
     ], "rows": [
         {c: [
             {v: "January"},
-            {v: 19, f: "42 items"},
-            {v: 12, f: "Ony 12 items"},
-            {v: 7, f: "7 servers"},
-            {v: 4}
+            {v: 1, f: "42 items"},
+            {v: 1, f: "Ony 12 items"},
+            {v: 1, f: "7 servers"},
+            {v: 1}
         ]},
         {c: [
             {v: "February"},
@@ -124,10 +123,9 @@ angular.module('linkToMyAppApp',['googlechart']).controller('MainCtrl', function
     chart1.formatters = {};
 
     $scope.chart = chart1;
-*/
-    $scope.chartReady = function (){
+    $scope.chart2 = chart1;
 
-        alert("ready");
+    $scope.chartReady = function (){
 
     };
 
