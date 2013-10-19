@@ -29,11 +29,17 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'unicorn'
 
+gem 'rails_12factor', group: :production
+
+group :development, :test do
+  gem 'rspec-rails', '~> 2.0'
+end
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
 
-gem 'rails_12factor', group: :production
 
 ruby "2.0.0"
+

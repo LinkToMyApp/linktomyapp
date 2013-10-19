@@ -1,0 +1,31 @@
+<h1>Listing mobile_apps</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Itunes url</th>
+      <th>Icon url</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @mobile_apps.each do |mobile_app| %>
+      <tr>
+        <td><%= mobile_app.name %></td>
+        <td><%= mobile_app.itunes_url %></td>
+        <td><%= mobile_app.icon_url %></td>
+        <td><%= link_to 'Show', mobile_app %></td>
+        <td><%= link_to 'Edit', edit_mobile_app_path(mobile_app) %></td>
+        <td><%= link_to 'Destroy', mobile_app, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Mobile app', new_mobile_app_path %>
