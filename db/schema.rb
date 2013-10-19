@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131019160238) do
+ActiveRecord::Schema.define(version: 20131019202724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 20131019160238) do
     t.boolean  "installed",         default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "user_agent"
   end
 
   add_index "link_clicks", ["app_link_id"], name: "index_link_clicks_on_app_link_id", using: :btree
