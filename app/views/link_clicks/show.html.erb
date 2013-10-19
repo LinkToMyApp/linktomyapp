@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>App link:</strong>
+  <%= @link_click.app_link_id %>
+</p>
+
+<p>
+  <strong>Ip adress:</strong>
+  <%= @link_click.ip_adress %>
+</p>
+
+<p>
+  <strong>Occurence counter:</strong>
+  <%= @link_click.occurence_counter %>
+</p>
+
+<p>
+  <strong>Installed:</strong>
+  <%= @link_click.installed %>
+</p>
+
+<%= link_to 'Edit', edit_link_click_path(@link_click) %> |
+<%= link_to 'Back', link_clicks_path %>

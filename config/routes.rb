@@ -1,4 +1,8 @@
 Linktomyapp::Application.routes.draw do
+  resources :link_clicks
+
+  resources :app_links
+
   resources :mobile_apps
 
   # The priority is based upon order of creation: first created -> highest priority.

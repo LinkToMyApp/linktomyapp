@@ -1,0 +1,33 @@
+<h1>Listing app_links</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mobile app</th>
+      <th>Referal</th>
+      <th>Clicks counter</th>
+      <th>Unique visitor counter</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @app_links.each do |app_link| %>
+      <tr>
+        <td><%= app_link.mobile_app_id %></td>
+        <td><%= app_link.referal %></td>
+        <td><%= app_link.clicks_counter %></td>
+        <td><%= app_link.unique_visitor_counter %></td>
+        <td><%= link_to 'Show', app_link %></td>
+        <td><%= link_to 'Edit', edit_app_link_path(app_link) %></td>
+        <td><%= link_to 'Destroy', app_link, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New App link', new_app_link_path %>

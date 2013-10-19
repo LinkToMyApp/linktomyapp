@@ -11,7 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131019113150) do
+ActiveRecord::Schema.define(version: 20131019125646) do
+
+  create_table "app_links", force: true do |t|
+    t.integer  "mobile_app_id",                      null: false
+    t.string   "referal",                            null: false
+    t.integer  "clicks_counter",         default: 0, null: false
+    t.integer  "unique_visitor_counter", default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "link_clicks", force: true do |t|
+    t.integer  "app_link_id"
+    t.string   "ip_adress"
+    t.integer  "occurence_counter"
+    t.boolean  "installed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "mobile_apps", force: true do |t|
     t.string   "name",       null: false

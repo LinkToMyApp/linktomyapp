@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Mobile app:</strong>
+  <%= @app_link.mobile_app_id %>
+</p>
+
+<p>
+  <strong>Referal:</strong>
+  <%= @app_link.referal %>
+</p>
+
+<p>
+  <strong>Clicks counter:</strong>
+  <%= @app_link.clicks_counter %>
+</p>
+
+<p>
+  <strong>Unique visitor counter:</strong>
+  <%= @app_link.unique_visitor_counter %>
+</p>
+
+<%= link_to 'Edit', edit_app_link_path(@app_link) %> |
+<%= link_to 'Back', app_links_path %>

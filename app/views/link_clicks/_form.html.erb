@@ -1,0 +1,33 @@
+<%= form_for(@link_click) do |f| %>
+  <% if @link_click.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@link_click.errors.count, "error") %> prohibited this link_click from being saved:</h2>
+
+      <ul>
+      <% @link_click.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :app_link_id %><br>
+    <%= f.number_field :app_link_id %>
+  </div>
+  <div class="field">
+    <%= f.label :ip_adress %><br>
+    <%= f.text_field :ip_adress %>
+  </div>
+  <div class="field">
+    <%= f.label :occurence_counter %><br>
+    <%= f.number_field :occurence_counter %>
+  </div>
+  <div class="field">
+    <%= f.label :installed %><br>
+    <%= f.check_box :installed %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
