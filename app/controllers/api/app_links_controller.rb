@@ -8,7 +8,7 @@ class Api::AppLinksController < ApplicationController
 	end
 
 	def clicks
-		unique_dates = LinkClick.order("DATE(created_at)").group("DATE(created_at)").count.map {|a|a[0]}
+		unique_dates = LinkClick.joins(:app_link).where(:app_links => {:referal => params[:referals]}).order("DATE(link_clicks.created_at)").group("DATE(link_clicks.created_at)").count.map {|a|a[0]}
 
 		result = {}
 		@clicks = unique_dates.map { |date|
