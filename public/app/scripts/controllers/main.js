@@ -11,7 +11,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
         var tableData = {
                       "type": "Table",
                       "displayed": true,
-                      "cssStyle": "height:100px; width:100%; margin-top: 20px;",
+                      "cssStyle": "height:300px; width:100%; margin-top: 20px;",
                       "data": {
                         "cols": [],
                         "rows": [],
@@ -74,7 +74,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     function createGraphData(){
 
         var graphData = {
-                      "type": "LineChart",
+                      "type": "AreaChart",
                       "displayed": true,
                       "cssStyle": "height:600px; width:100%;",
                       "data": {
@@ -101,15 +101,15 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
 
             var cols = [{"id":"date","label":"date","type":"string"}];
             var rows = [];
+            var i = 0;
+            for (var col in $scope.graphData) {
 
-            var length = $scope.graphData.length,element = null;
-            for (var i = 0; i < length; i++) {
-
-                element = $scope.graphData[i];
+                i++;
+                var element = $scope.graphData[col];
                 var obj = {
                             "c": [
                               {
-                                "v": element.date
+                                "v": col
                               }
                             ]
                           };
@@ -117,21 +117,19 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
                 
                 var ref = null;
 
-                for (var index = element.values.length - 1; index >= 0; index--) {
-                    ref = element.values[index];
+                for (var index = element.length - 1; index >= 0; index--) {
+                    ref = element[index];
             
-                    if (i == 0) {
-                        cols.push({"id":ref.name,"label":ref.name,"type":"number"});
+                    if (i == 1) {
+                        cols.push({"id":ref.referal,"label":ref.referal,"type":"number"});
                     };
                     
-                    obj.c.push({"v":ref.value});
+                    obj.c.push({"v":ref.link_clicks_count});
                 };
                 
                 rows.push(obj);
             }
 
-            console.log(JSON.stringify(cols));
-            console.log(JSON.stringify(rows));
             graphData.data.cols = cols;
             graphData.data.rows = rows;
 
@@ -141,90 +139,25 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
 
     /**************************** Dummy Data **************************/
 
-        $scope.referers = [
-        {
-            "referal": "toto",
-            "link_clicks_count": 10,
-            "installs_count": 8
-        },
-        {
-            "referal": "titi",
-            "link_clicks_count": 20,
-            "installs_count": 5
-        }
-        ];
+        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links'}).
+          success(function(data, status, headers, config) {
+            $scope.referers = data;
+            $scope.table = createTableData();
+        }).
+        error(function(data, status, headers, config) {
+    
+        });
 
-        $scope.graphData = [
-        {
-            "date": "10/10",
-            "values": [
-                {
-                    "name": "toto",
-                    "value": 2
-                },
-                {
-                    "name": "titi",
-                    "value": 1
-                }
-            ]
-        },
-        {
-            "date": "11/10",
-            "values": [
-                {
-                    "name": "toto",
-                    "value": 1
-                },
-                {
-                    "name": "titi",
-                    "value": 3
-                }
-            ]
-        },
-        {
-            "date": "12/10",
-            "values": [
-                {
-                    "name": "toto",
-                    "value": 1
-                },
-                {
-                    "name": "titi",
-                    "value": 3
-                }
-            ]
-        },
-        {
-            "date": "13/10",
-            "values": [
-                {
-                    "name": "toto",
-                    "value": 2
-                },
-                {
-                    "name": "titi",
-                    "value": 2
-                }
-            ]
-        },
-        {
-            "date": "14/10",
-            "values": [
-                {
-                    "name": "toto",
-                    "value": 3
-                },
-                {
-                    "name": "titi",
-                    "value": 1
-                }
-            ]
-        }
-    ];
+        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links/clicks'}).
+          success(function(data, status, headers, config) {
+            console.log(JSON.stringify(data));
+            $scope.graphData = data;
+            $scope.graph = createGraphData();
+        }).
+        error(function(data, status, headers, config) {
+    
+        });
 
     /************************** Creation **************************/
-
-    $scope.table = createTableData();
-    $scope.graph = createGraphData();
 
   });
