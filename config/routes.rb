@@ -12,7 +12,11 @@ Linktomyapp::Application.routes.draw do
 
   resources :link_clicks
 
-  resources :app_links
+  resources :app_links do
+    collection do
+      get :follow
+    end
+  end
 
   resources :mobile_apps
 
