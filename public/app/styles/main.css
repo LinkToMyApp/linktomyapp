@@ -29,10 +29,28 @@ body {
     background-color: #ffffff;
 }
 
+.menu-select{
+    width: 150px;
+    float: left;
+    margin-top: 100px;
+}
+
 /********* Utils *********/
 
 .center{
     text-align: center;
+}
+
+.inline{
+    display: inline;
+}
+
+.left{
+    float: left;
+}
+
+.right{
+    float: right;
 }
 
 /********* Ovveride **************/

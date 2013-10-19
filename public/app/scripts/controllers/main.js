@@ -76,7 +76,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
         var graphData = {
                       "type": "AreaChart",
                       "displayed": true,
-                      "cssStyle": "height:600px; width:100%;",
+                      "cssStyle": "height:600px; width:700px;",
                       "data": {
                         "cols": [],
                         "rows": []
@@ -152,28 +152,74 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
         }
     
 
-    /**************************** Dummy Data **************************/
+    /**************************** Data **************************/
 
-        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links'}).
-          success(function(data, status, headers, config) {
+        function updateReferrers(){
+            console.log("update");
+            $http({method: 'GET', url: 'http://127.0.0.1:3000/api/app_links'}).
+                success(function(data, status, headers, config) {
 
             $scope.referers = data;
             $scope.table = createTableData();
-        }).
-        error(function(data, status, headers, config) {
-    
+            }).
+            error(function(data, status, headers, config) {
+        
+            });   
+        }
+
+        updateReferrers();
+
+        setInterval(function(){
+
+            updateReferrers();
+
+        }, 60000);
+
+        $scope.$watch("referers",function(){
+            
+            callGraph();
+
         });
 
-        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links/clicks'}).
-          success(function(data, status, headers, config) {
-            console.log(JSON.stringify(data));
-            $scope.graphData = data;
-            $scope.graph = createGraphData();
-        }).
-        error(function(data, status, headers, config) {
-    
-        });
+    function callGraph(){
+        //todo : call avec parametres.
+        var params = "";
+            for (var i = $scope.ref.length - 1; i >= 0; i--) {
+                var refName = $scope.ref[i];
+                params += "referals[]="+refName;
+                if (i != 0) {
+                    params += "&"
+                };
+            };
+            var url = 'http://127.0.0.1:3000/api/app_links/clicks?'+params;
+            console.log(url);
+            $http({method: 'GET', url:url}).
+              success(function(data, status, headers, config) {
+                console.log(JSON.stringify(data));
+                $scope.graphData = data;
+                $scope.graph = createGraphData();
+            }).
+            error(function(data, status, headers, config) {
+        
+            });
+    };
 
-    /************************** Creation **************************/
+    $scope.ref = [];
+
+    $scope.change = function(index){
+
+        console.log(index);
+
+        if($("#check_"+index).is(':checked')){
+            $scope.ref.push($scope.referers[index].referal);
+        }
+        else{
+            var index = $scope.ref.indexOf($scope.referers[index].referal);
+            $scope.ref.splice(index,1);
+        }
+
+        console.log(JSON.stringify($scope.ref));
+        callGraph();
+    }
 
   });
