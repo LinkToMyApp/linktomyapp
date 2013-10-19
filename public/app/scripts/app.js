@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('linkToMyAppApp', [])
+angular.module('linkToMyAppApp', ['googlechart'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

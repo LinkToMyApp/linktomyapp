@@ -1,8 +1,15 @@
 <div class="row">
     <div class="span3" ng-controller="LeftmenuCtrl">
-        <div class="menu" ng-repeat="referer in referers">{{referer}}</div>
+        <ul class="unstyled center">
+            <li>All</li>
+        </ul>
+        <ul class="menu unstyled center" ng-repeat="referer in referers">
+            <li>{{referer}}</li>
+        </ul>
     </div>
-    <div class="span9">DASHBOARD</div>
+    <div class="span9">
+        <div google-chart chart="chart" style="{{chart.cssStyle}}" on-ready="chartReady()" />
+    </div>
 </div>
 
 
