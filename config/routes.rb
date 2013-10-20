@@ -9,6 +9,7 @@ Linktomyapp::Application.routes.draw do
         post :event
       end
     end
+    resources :mobile_apps
   end
 
   resources :link_clicks
