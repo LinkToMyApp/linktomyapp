@@ -93,6 +93,75 @@ describe Api::AppLinksController do
 		end
 	end
 
+
+	describe "installs" do
+
+		let(:create_links) do 
+			app_link = FactoryGirl.create(:app_link, :referal => "toto", :link_clicks_count => 1, :installs_count => 1)
+			FactoryGirl.create(:link_click, :app_link => app_link, :created_at => Date.parse("02/01/2013"), :installed => true)
+
+			app_link2 = FactoryGirl.create(:app_link, :referal => "titi", :link_clicks_count => 2, :installs_count => 0)
+			FactoryGirl.create(:link_click, :app_link => app_link2, :created_at => Date.parse("02/01/2013"), :installed => false)
+			FactoryGirl.create(:link_click, :app_link => app_link2, :created_at => Date.parse("03/01/2013"), :installed => false)
+
+			app_link3 = FactoryGirl.create(:app_link, :referal => "tata", :link_clicks_count => 2, :installs_count => 2)
+			FactoryGirl.create(:link_click, :app_link => app_link3, :created_at => Date.parse("02/01/2013"), :installed => true)
+			FactoryGirl.create(:link_click, :app_link => app_link3, :created_at => Date.parse("01/01/2013"), :installed => true)
+		end
+
+		context "with referals in params" do
+			it "returns all installs by date" do				
+				create_links
+
+				get :installs, :referals => ["toto", "titi", "tata"], :format => :json
+
+				resp = JSON.parse(response.body)
+				resp.keys.count.should == 3
+
+				resp["2013-01-01"].count.should == 1
+				res1 = resp["2013-01-01"][0]
+				res1["referal"].should eq("tata")
+				res1["installs_count"].should eq(1)
+
+				resp["2013-01-02"].count.should == 2
+				res2 = resp["2013-01-02"][0]
+				res2["referal"].should eq("toto")
+				res2["installs_count"].should eq(1)
+				res3 = resp["2013-01-02"][1]
+				res3["referal"].should eq("tata")
+				res3["installs_count"].should eq(1)
+
+				resp["2013-01-03"].count.should == 0
+			end
+
+			it "returns only selected referals clicks by date" do				
+				create_links
+
+				get :installs, :referals => ["toto"], :format => :json
+
+				resp = JSON.parse(response.body)
+
+				resp.keys.count.should == 1
+				resp["2013-01-02"].count.should == 1
+				res2 = resp["2013-01-02"][0]
+				res2["referal"].should eq("toto")
+				res2["installs_count"].should eq(1)
+			end
+		end	
+		
+
+		context "without referals in params" do
+			it "returns no clicks" do
+				create_links
+
+				get :installs, :referals => [], :format => :json
+
+				resp = JSON.parse(response.body)
+				resp.should eq({})
+			end
+		end
+	end
+
 	describe "app_installed" do
 		before(:each) do
 			@ip_adress = "1.1.1.1"

@@ -21,6 +21,16 @@ class Api::AppLinksController < ApplicationController
 		render json: result
 	end
 
+	def installs
+		unique_dates = LinkClick.joins(:app_link).where(:app_links => {:referal => params[:referals]}).order("DATE(link_clicks.created_at)").group("DATE(link_clicks.created_at)").count.map {|a|a[0]}
+
+		result = {}
+		@clicks = unique_dates.map { |date|
+			result[date]=AppLink.select("app_links.referal, count(link_clicks.id) AS installs_count").where(:referal => params[:referals]).joins(:link_clicks).where("installed = TRUE AND DATE(link_clicks.created_at) = ?", date).group("app_links.referal")
+		}
+		render json: result
+	end
+
 	def app_installed
 		link_clicks = LinkClick.where(:installed => false, :ip_adress => request.remote_ip, :app_link_id => AppLink.where(:mobile_app_id => params[:app_id])).order("created_at DESC")
 
@@ -38,8 +48,6 @@ class Api::AppLinksController < ApplicationController
 	def event
 	  #Todo call assynchrone
 	  link_click = LinkClick.where(:id => params[:id]).first
-
-	  puts "link_click = #{link_click}"
 
 	  if link_click.present?
 	  	mobile_app = MobileApp.first
