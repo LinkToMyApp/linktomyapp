@@ -60,6 +60,13 @@ body {
     float: right;
 }
 
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /********* Ovveride **************/
 
 .google-visualization-table-table .gradient,
