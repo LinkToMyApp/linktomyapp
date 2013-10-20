@@ -141,7 +141,13 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http, $r
                     ref = element[index];
                     var indexOrder = order.indexOf(ref.referal);
 
-                    object.c[indexOrder] = {"v":ref.link_clicks_count};
+                    if ($scope.currentType == "Clicks") {
+                        object.c[indexOrder] = {"v":ref.link_clicks_count};
+                    }
+                    else{
+                        object.c[indexOrder] = {"v":ref.installs_count};
+                    }
+                    
                 };
 
                 rows.push(object);
