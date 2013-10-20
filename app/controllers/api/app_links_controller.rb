@@ -11,35 +11,34 @@ class Api::AppLinksController < ApplicationController
 	end
 
 	def clicks
-		unique_dates = LinkClick.joins(:app_link).where(:app_links => {:referal => params[:referals]}).order("DATE(link_clicks.created_at)").group("DATE(link_clicks.created_at)").count.map {|a|a[0]}
+		unique_dates = LinkClick.dates_by_referal(params[:referals])
 
-		result = {}
+		app_links = {}
 		@clicks = unique_dates.map { |date|
-			result[date]=AppLink.select("app_links.referal, count(link_clicks.id) AS link_clicks_count").where(:referal => params[:referals]).joins(:link_clicks).where("DATE(link_clicks.created_at) = ?", date).group("app_links.referal")
+			app_links[date] = AppLink.clicks_by_date_and_referal(date, params[:referals])
 		}
 
-		render json: result
+		render json: app_links
 	end
 
 	def installs
-		unique_dates = LinkClick.joins(:app_link).where(:app_links => {:referal => params[:referals]}).order("DATE(link_clicks.created_at)").group("DATE(link_clicks.created_at)").count.map {|a|a[0]}
+		unique_dates = LinkClick.dates_by_referal(params[:referals])
 
 		result = {}
 		@clicks = unique_dates.map { |date|
-			result[date]=AppLink.select("app_links.referal, count(link_clicks.id) AS installs_count").where(:referal => params[:referals]).joins(:link_clicks).where("installed = TRUE AND DATE(link_clicks.created_at) = ?", date).group("app_links.referal")
+			result[date] = AppLink.installs_by_date_and_referal(date, params[:referals])
 		}
 		render json: result
 	end
 
 	def app_installed
-		link_clicks = LinkClick.where(:installed => false, :ip_adress => request.remote_ip, :app_link_id => AppLink.where(:mobile_app_id => params[:app_id])).order("created_at DESC")
+		link_click = LinkClick.where(:installed => false, :ip_adress => request.remote_ip, :app_link_id => AppLink.where(:mobile_app_id => params[:app_id])).order("created_at DESC").first
 
-		if link_clicks.blank?
+		if link_click.nil?
 			link_click_id=SecureRandom.hex(8)
 		else
-			link_click = link_clicks.first
 			link_click.update_attributes(:installed => true)
-			link_click.app_link.installs_count += 1
+			AppLink.increment_counter(:installs_count, link_click.app_link.id)
 			link_click.app_link.save
 			link_click_id=link_click.id
 		end

@@ -184,12 +184,18 @@ describe Api::AppLinksController do
 				end
 
 				it "updates link click status" do
-					#stub_request(:any, @callback_url)
 					link_click = FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
 
 					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
 
 					link_click.reload.installed.should == true
+				end
+
+				it "increments installs count" do
+					app_link.update_attributes(:installs_count => 0)
+					FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
+					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+					app_link.reload.installs_count.should == 1
 				end
 			end
 
