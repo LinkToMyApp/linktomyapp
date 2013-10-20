@@ -37,7 +37,7 @@ class Api::AppLinksController < ApplicationController
 			  
 			  url = URI.parse mobile_app.callback_url
 			  req = Net::HTTP::Post.new url.path
-			  req.set_form_data({ 'udid' => params[:udid] , :event => "INTALLED"})
+			  req.set_form_data({ 'udid' => params[:udid] , :event => "INSTALLED" , :referal => link_click.app_link.referal})
 			  res = Net::HTTP.start(url.host, url.port) do |http|
 			    http.request req
 			  end
