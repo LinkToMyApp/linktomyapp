@@ -6,7 +6,7 @@ def rand_time(from, to=Time.now)
   Time.at(rand_in_range(from.to_f, to.to_f))
 end
 
-referals = ["facebook.com","tweeter.com","techcrunch.com","rudebaguette.com","adNetwork.com"]
+referals = ["facebook.com","twitter.com","techcrunch.com","rudebaguette.com","adNetwork.com"]
 
 puts "Create Youboox App..."
 MobileApp.destroy_all

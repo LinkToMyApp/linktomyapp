@@ -39,6 +39,8 @@ class Api::AppLinksController < ApplicationController
 		else
 			link_click = link_clicks.first
 			link_click.update_attributes(:installed => true)
+			link_click.app_link.increment_counter(:installs_count, 5)
+			link_click.app_link.save
 			link_click_id=link_click.id
 		end
 
