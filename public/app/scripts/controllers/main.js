@@ -5,7 +5,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     $scope.chartReady = function (){
 
     };
-
+    //TODO : Make a Service for Graph creation
     function createTableData(){
 
         var tableData = {
@@ -76,7 +76,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
         var graphData = {
                       "type": "AreaChart",
                       "displayed": true,
-                      "cssStyle": "height:600px; width:100%;",
+                      "cssStyle": "height:600px; width:700px;",
                       "data": {
                         "cols": [],
                         "rows": []
@@ -152,28 +152,81 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
         }
     
 
-    /**************************** Dummy Data **************************/
-
-        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links'}).
-          success(function(data, status, headers, config) {
+    /**************************** Data **************************/
+    //TODO : Make a Service for Http calls
+        function updateReferrers(){
+            console.log("update");
+            $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links'}).
+                success(function(data, status, headers, config) {
 
             $scope.referers = data;
             $scope.table = createTableData();
-        }).
-        error(function(data, status, headers, config) {
-    
-        });
+            }).
+            error(function(data, status, headers, config) {
+        
+            });   
+        }
 
-        $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links/clicks'}).
-          success(function(data, status, headers, config) {
-            console.log(JSON.stringify(data));
-            $scope.graphData = data;
-            $scope.graph = createGraphData();
-        }).
-        error(function(data, status, headers, config) {
-    
-        });
+        updateReferrers();
 
-    /************************** Creation **************************/
+        setInterval(function(){
+
+            updateReferrers();
+
+        }, 60000);
+
+        $scope.$watch("referers",function(){
+            
+            callGraph();
+
+        });
+    //TODO : Make a Service for Http calls
+    function callGraph(){
+
+            var params = "?";
+            for (var i = $scope.ref.length - 1; i >= 0; i--) {
+                var refName = $scope.ref[i];
+                params += "referals[]="+refName;
+                if (i != 0) {
+                    params += "&"
+                };
+            };
+
+            //TODO : make ng-hide work
+            if ($scope.ref.length == 0) {
+                $("#graph").css("visibility","hidden");
+            }
+            else{
+                $("#graph").css("visibility","visible");
+            }
+
+            var url = 'http://linktomyapp.herokuapp.com/api/app_links/clicks'+params;
+            console.log(url);
+            $http({method: 'GET', url:url}).
+              success(function(data, status, headers, config) {
+                console.log(JSON.stringify(data));
+                $scope.graphData = data;
+                $scope.graph = createGraphData();
+            }).
+            error(function(data, status, headers, config) {
+        
+            });
+    };
+
+    $scope.ref = [];
+
+    $scope.change = function(index){
+
+        if($("#check_"+index).is(':checked')){
+            $scope.ref.push($scope.referers[index].referal);
+        }
+        else{
+            var index = $scope.ref.indexOf($scope.referers[index].referal);
+            $scope.ref.splice(index,1);
+        }
+
+        console.log(JSON.stringify($scope.ref));
+        callGraph();
+    }
 
   });

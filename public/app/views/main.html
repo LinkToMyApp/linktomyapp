@@ -7,11 +7,20 @@
         <br />
             Link : <a ng-href="{{app_link}}">{{app_link}}</a>
         </div>
-
     </div>
-    <div class="span9" id="main-content">
+    <div class="span12" id="main-content">
         <div google-chart chart="table" style="{{chart.cssStyle}}" on-ready="chartReady()" />
-        <div google-chart chart="graph" style="{{chart.cssStyle}}" on-ready="chartReady()" />
+        <div class="menu-select">
+            <span ng-repeat="referer in referers">
+            <label class="inline" for="{{referer.referal}}">{{referer.referal}}</label>
+            <input ng-change="change($index)" ng-model="reference" class="right" id="check_{{$index}}" type="checkbox" name="reference" value="{{referer.referal}}">
+        </span>
+        </div>
+
+        <div id="graph" style="visibility:hidden;">
+            <div google-chart class="left" chart="graph" style="{{chart.cssStyle}}" on-ready="chartReady()" />
+        </div>
+        
     </div>
 </div>
 
