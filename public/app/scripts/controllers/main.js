@@ -156,7 +156,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
 
         function updateReferrers(){
             console.log("update");
-            $http({method: 'GET', url: 'http://127.0.0.1:3000/api/app_links'}).
+            $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links'}).
                 success(function(data, status, headers, config) {
 
             $scope.referers = data;
@@ -183,7 +183,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
 
     function callGraph(){
         //todo : call avec parametres.
-        var params = "";
+        var params = "?";
             for (var i = $scope.ref.length - 1; i >= 0; i--) {
                 var refName = $scope.ref[i];
                 params += "referals[]="+refName;
@@ -191,7 +191,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
                     params += "&"
                 };
             };
-            var url = 'http://127.0.0.1:3000/api/app_links/clicks?'+params;
+            var url = 'http://linktomyapp.herokuapp.com/api/app_links/clicks'+params;
             console.log(url);
             $http({method: 'GET', url:url}).
               success(function(data, status, headers, config) {
