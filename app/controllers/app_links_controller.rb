@@ -62,6 +62,11 @@ class AppLinksController < ApplicationController
   end
 
   def follow
+    puts "request.env[HTTP_REFERER] = #{request.env[HTTP_REFERER]}"
+    puts "request.referrer = #{request.referrer}"
+    
+
+
     app = MobileApp.first
     redirect_to app.itunes_url
 
