@@ -20,7 +20,8 @@ describe Api::AppLinksController do
 	end
 
 	describe "clicks" do
-		it "returns all clicks by date" do
+
+		let(:create_links) do 
 			app_link = FactoryGirl.create(:app_link, :referal => "toto", :link_clicks_count => 1, :installs_count => 1)
 			FactoryGirl.create(:link_click, :app_link => app_link, :created_at => Date.parse("02/01/2013"))
 
@@ -31,31 +32,47 @@ describe Api::AppLinksController do
 			app_link3 = FactoryGirl.create(:app_link, :referal => "tata", :link_clicks_count => 2, :installs_count => 2)
 			FactoryGirl.create(:link_click, :app_link => app_link3, :created_at => Date.parse("02/01/2013"))
 			FactoryGirl.create(:link_click, :app_link => app_link3, :created_at => Date.parse("01/01/2013"))
+		end
 
-			get :clicks, :format => :json
+		context "with referals in params" do
+			it "returns all clicks by date" do				
+				create_links
 
-			resp = JSON.parse(response.body)
+				get :clicks, :referals => ["toto", "titi", "tata"], :format => :json
 
-			resp["2013-01-01"].count.should == 1
-			res1 = resp["2013-01-01"][0]
-			res1["referal"].should eq("tata")
-			res1["link_clicks_count"].should eq(1)
+				resp = JSON.parse(response.body)
 
-			resp["2013-01-02"].count.should == 3
-			res2 = resp["2013-01-02"][0]
-			res2["referal"].should eq("toto")
-			res2["link_clicks_count"].should eq(1)
-			res3 = resp["2013-01-02"][1]
-			res3["referal"].should eq("tata")
-			res3["link_clicks_count"].should eq(1)
-			res4 = resp["2013-01-02"][2]
-			res4["referal"].should eq("titi")
-			res4["link_clicks_count"].should eq(1)
+				resp["2013-01-01"].count.should == 1
+				res1 = resp["2013-01-01"][0]
+				res1["referal"].should eq("tata")
+				res1["link_clicks_count"].should eq(1)
 
-			resp["2013-01-03"].count.should == 1
-			res5 = resp["2013-01-03"][0]
-			res5["referal"].should eq("titi")
-			res5["link_clicks_count"].should eq(1)
+				resp["2013-01-02"].count.should == 3
+				res2 = resp["2013-01-02"][0]
+				res2["referal"].should eq("toto")
+				res2["link_clicks_count"].should eq(1)
+				res3 = resp["2013-01-02"][1]
+				res3["referal"].should eq("tata")
+				res3["link_clicks_count"].should eq(1)
+				res4 = resp["2013-01-02"][2]
+				res4["referal"].should eq("titi")
+				res4["link_clicks_count"].should eq(1)
+
+				resp["2013-01-03"].count.should == 1
+				res5 = resp["2013-01-03"][0]
+				res5["referal"].should eq("titi")
+				res5["link_clicks_count"].should eq(1)
+			end
+		end	
+		context "without referals in params" do
+			it "returns no clicks" do
+				create_links
+
+				get :clicks, :referals => [], :format => :json
+
+				resp = JSON.parse(response.body)
+				resp.should eq({})
+			end
 		end
 	end
 
@@ -65,16 +82,16 @@ describe Api::AppLinksController do
 	      	@controller.request.stubs(:remote_ip).returns(@ip_adress)
 		end
 
-		let(:mobile_app) { FactoryGirl.create(:mobile_app, :id => 12) }
+		let(:mobile_app) { FactoryGirl.create(:mobile_app, :id => 12, :callback_url => "http://linktomyapp.herokuapp.com/") }
 
-		let(:app_link) { FactoryGirl.create(:app_link, :mobile_app => mobile_app) }
+		let(:app_link) { FactoryGirl.create(:app_link, :mobile_app => mobile_app,) }
 
 		context "link was clicked" do
 			context "same IP address" do
 				it "returns link click id" do
 					FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
 
-					post :app_installed, :app_id => mobile_app.id, :format => :json
+					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
 
 					resp = JSON.parse(response.body)
 					resp["link_click_id"].should eq(123)
@@ -83,9 +100,30 @@ describe Api::AppLinksController do
 				it "updates link click status" do
 					link_click = FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
 
-					post :app_installed, :app_id => mobile_app.id, :format => :json
+					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
 
 					link_click.reload.installed.should == true
+				end
+
+				context "has a callback_url" do
+					it "sends event to callback url" do
+						@mock_http = mock("http")
+						Net::HTTP.stub!(:start).and_yield @mock_http
+						@mock_http.should_receive(:request).with(an_instance_of(Net::HTTP::Post)).and_return 202
+
+						FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
+
+						post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+					end
+				end
+				context "dont have a callback_url" do
+					it "ignores callback" do
+						mobile_app.update_attributes(:callback_url => nil)
+
+						FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
+
+						post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+					end
 				end
 			end
 
@@ -94,7 +132,7 @@ describe Api::AppLinksController do
 					SecureRandom.stubs(:hex).returns(321)
 					FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => "2.2.2.2", :app_link => app_link)
 
-					post :app_installed, :app_id => mobile_app.id, :format => :json
+					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
 
 					resp = JSON.parse(response.body)
 					resp["link_click_id"].should eq(321)
@@ -103,7 +141,7 @@ describe Api::AppLinksController do
 				it "doesn't update the link click status" do
 					link_click = FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => "2.2.2.2", :app_link => app_link)
 
-					post :app_installed, :app_id => mobile_app.id, :format => :json
+					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
 
 					link_click.reload.installed.should == false
 				end
@@ -114,7 +152,7 @@ describe Api::AppLinksController do
 			it "returns random unique id" do
 				SecureRandom.stubs(:hex).returns(321)
 
-				post :app_installed, :app_id => mobile_app.id, :format => :json
+				post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
 
 				resp = JSON.parse(response.body)
 				resp["link_click_id"].should eq(321)
