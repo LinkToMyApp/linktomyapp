@@ -2,6 +2,9 @@
 
 angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http, $rootScope) {
 
+
+    $rootScope.app_name = "Dashboard";
+
     $scope.chartReady = function (){
 
     };
@@ -69,8 +72,6 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http, $r
             return tableData;
         }
 
-    $scope.showType = "Click";
-
     function createGraphData(){
 
         var graphData = {
@@ -82,12 +83,12 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http, $r
                         "rows": []
                       },
                       "options": {
-                        "title": $scope.showType,
+                        "title": $scope.currentType,
                         "isStacked": "true",
                         "fill": 20,
                         "displayExactValues": true,
                         "vAxis": {
-                          "title": $scope.showType,
+                          "title": $scope.currentType,
                           "gridlines": {
                             "count": 5
                           }
@@ -161,6 +162,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http, $r
 
             $scope.referers = data;
             $scope.table = createTableData();
+
             }).
             error(function(data, status, headers, config) {
         
@@ -169,17 +171,18 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http, $r
 
         updateReferrers();
 
-        setInterval(function(){
+        /*setInterval(function(){
 
             updateReferrers();
 
-        }, 3000);
+        }, 30000);*/
 
         $scope.$watch("referers",function(){
             
             callGraph();
 
         });
+
     //TODO : Make a Service for Http calls
     function callGraph(){
 

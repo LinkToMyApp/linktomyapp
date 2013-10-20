@@ -1,14 +1,23 @@
 'use strict';
 
 angular.module('linkToMyApp')
-  .controller('LeftmenuCtrl', function ($scope) {
+  .controller('LeftmenuCtrl', function ($scope, $http, $rootScope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
 
-    $scope.referers = ["",""];
-    $scope.app_icon = "http://a4.mzstatic.com/us/r30/Purple/v4/ff/42/bb/ff42bbec-132d-3722-6218-bec51eb43e5e/mzl.clfucble.175x175-75.jpg";
+    //api/mobile_apps/1.json
+    var url = 'http://'+window.location.host+'/api/mobile_apps/1.json';
+    $http({method: 'GET', url:url}).
+              success(function(data, status, headers, config) {
+                $scope.app_icon = data.icon_url;
+                $rootScope.app_name = data.name;
+            }).
+            error(function(data, status, headers, config) {
+        
+            });
+
     $scope.app_link = "http://"+window.location.host+"/app_links/follow";
   });

@@ -6,7 +6,7 @@ def rand_time(from, to=Time.now)
   Time.at(rand_in_range(from.to_f, to.to_f))
 end
 
-
+referals = ["facebook.com","tweeter.com","techcrunch.com","rudebaguette.com","adNetwork.com"]
 
 puts "Create Youboox App..."
 MobileApp.destroy_all
@@ -16,12 +16,13 @@ mobile_app = MobileApp.create(:name => "Youboox",
 	:callback_url => "http://mighty-basin-2906.herokuapp.com/users/track")
 puts "Done!"
 
-10.times do
+5.times do |i|
 	puts "Create App Link ..."
-	rand_click = rand(20)
+	rand_click = rand(40)
 	app_link = AppLink.create(:mobile_app_id => mobile_app.id,
-		:referal => Faker::Internet.domain_name,
+		:referal => referals[i],
 		:link_clicks_count => rand_click,
+        :installs_count => (rand_click/2).to_i,
 		:unique_visitor_counter => rand_click)
 	puts "Done !"
 
