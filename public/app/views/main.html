@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row-fluid">
     <div class="span3" id="left-panel" ng-controller="LeftmenuCtrl">
         <ul class="unstyled center">
             <li><img ng-src="{{app_icon}}"></li>
@@ -9,19 +9,31 @@
             <a ng-href="{{app_link}}">Custom Link</a>
         </div>
     </div>
-    <div class="span12" id="main-content">
+    <div class="span8" id="main-content">
         <div google-chart chart="table" style="{{chart.cssStyle}}" on-ready="chartReady()" />
-        <div class="menu-select">
-            <span ng-repeat="referer in referers">
-            <label class="inline" for="{{referer.referal}}">{{referer.referal}}</label>
-            <input ng-change="change($index)" ng-model="reference" class="right" id="check_{{$index}}" type="checkbox" name="reference" value="{{referer.referal}}">
-        </span>
-        </div>
 
-        <div id="graph" style="visibility:hidden;">
-            <div google-chart class="left" chart="graph" style="{{chart.cssStyle}}" on-ready="chartReady()" />
+        <div>
+            <div class="menu-select span3">
+                <span class="left" ng-repeat="referer in referers">
+                    <label class="inline" for="{{referer.referal}}">{{referer.referal}}</label>
+                    <input ng-change="change($index)" class="right" ng-model="indexChecks[referer.referal]" ng-checked="indexChecks[referer.referal]" id="check_{{$index}}" type="checkbox" name="reference" value="{{referer.referal}}">
+                </span>
+            </div>
+            <div id="graph" style="visibility:hidden;" class="span9">
+                <div class="btn-group">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    {{currentType}}
+                    <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-click="click()">Clicks</li>
+                        <li class="divider"></li>
+                        <li ng-click="install()">Installs</li>
+                    </ul>
+                </div>
+                <div google-chart class="left" chart="graph" style="{{chart.cssStyle}}" on-ready="chartReady()" />
+            </div>
         </div>
-        
     </div>
 </div>
 

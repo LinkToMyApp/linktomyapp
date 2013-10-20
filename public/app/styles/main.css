@@ -30,9 +30,16 @@ body {
 }
 
 .menu-select{
-    width: 150px;
-    float: left;
     margin-top: 100px;
+}
+
+.menu-select span{
+    width: 150px;
+}
+
+.btn-group{
+    margin-left: 40%;
+    margin-top: 10%;
 }
 
 /********* Utils *********/
@@ -52,7 +59,6 @@ body {
 .right{
     float: right;
 }
-
 
 /********* Ovveride **************/
 

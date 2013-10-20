@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
+angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http, $rootScope) {
 
     $scope.chartReady = function (){
 
@@ -76,7 +76,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
         var graphData = {
                       "type": "AreaChart",
                       "displayed": true,
-                      "cssStyle": "height:600px; width:700px;",
+                      "cssStyle": "height:600px; width:100%;",
                       "data": {
                         "cols": [],
                         "rows": []
@@ -173,7 +173,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
 
             updateReferrers();
 
-        }, 60000);
+        }, 3000);
 
         $scope.$watch("referers",function(){
             
@@ -200,7 +200,14 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
                 $("#graph").css("visibility","visible");
             }
 
-            var url = 'http://'+window.location.host+'/api/app_links/clicks'+params;
+            if ($scope.currentType == "Clicks") {
+                var url = 'http://'+window.location.host+'/api/app_links/clicks'+params;
+            }
+            else{
+                var url = 'http://'+window.location.host+'/api/app_links/installs'+params;
+            }
+
+            
             console.log(url);
             $http({method: 'GET', url:url}).
               success(function(data, status, headers, config) {
@@ -214,6 +221,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     };
 
     $scope.ref = [];
+    $scope.indexChecks = {};
 
     $scope.change = function(index){
 
@@ -225,7 +233,19 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
             $scope.ref.splice(index,1);
         }
 
-        console.log(JSON.stringify($scope.ref));
+        console.log("indexes "+JSON.stringify($scope.indexChecks));
+        callGraph();
+    }
+
+    $scope.currentType = "Clicks";
+    //TODO : bind a model object
+    $scope.click = function (){
+        $scope.currentType = "Clicks";
+        callGraph();
+    }   
+
+    $scope.install = function(){
+        $scope.currentType = "Installs";
         callGraph();
     }
 
