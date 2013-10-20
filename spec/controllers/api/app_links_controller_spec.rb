@@ -41,6 +41,7 @@ describe Api::AppLinksController do
 				get :clicks, :referals => ["toto", "titi", "tata"], :format => :json
 
 				resp = JSON.parse(response.body)
+				resp.keys.count.should == 3
 
 				resp["2013-01-01"].count.should == 1
 				res1 = resp["2013-01-01"][0]
@@ -63,7 +64,23 @@ describe Api::AppLinksController do
 				res5["referal"].should eq("titi")
 				res5["link_clicks_count"].should eq(1)
 			end
+
+			it "returns only selected referals clicks by date" do				
+				create_links
+
+				get :clicks, :referals => ["toto"], :format => :json
+
+				resp = JSON.parse(response.body)
+
+				resp.keys.count.should == 1
+				resp["2013-01-02"].count.should == 1
+				res2 = resp["2013-01-02"][0]
+				res2["referal"].should eq("toto")
+				res2["link_clicks_count"].should eq(1)
+			end
 		end	
+		
+
 		context "without referals in params" do
 			it "returns no clicks" do
 				create_links

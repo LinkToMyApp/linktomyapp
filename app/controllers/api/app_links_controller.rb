@@ -15,7 +15,7 @@ class Api::AppLinksController < ApplicationController
 
 		result = {}
 		@clicks = unique_dates.map { |date|
-			result[date]=AppLink.select("app_links.referal, count(link_clicks.id) AS link_clicks_count").joins(:link_clicks).where("DATE(link_clicks.created_at) = ?", date).group("app_links.referal")
+			result[date]=AppLink.select("app_links.referal, count(link_clicks.id) AS link_clicks_count").where(:referal => params[:referals]).joins(:link_clicks).where("DATE(link_clicks.created_at) = ?", date).group("app_links.referal")
 		}
 
 		render json: result
