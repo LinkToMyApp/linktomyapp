@@ -21,7 +21,7 @@ class Api::AppLinksController < ApplicationController
 		render json: result
 	end
 
-	def app_installed
+	def event
 	    link_clicks = LinkClick.where(:installed => false, :ip_adress => request.remote_ip, :app_link_id => AppLink.where(:mobile_app_id => params[:app_id])).order("created_at DESC")
 
 	    if link_clicks.blank?
@@ -37,7 +37,7 @@ class Api::AppLinksController < ApplicationController
 			  
 			  url = URI.parse mobile_app.callback_url
 			  req = Net::HTTP::Post.new url.path
-			  req.set_form_data({ 'udid' => params[:udid] , :event => "INTALLED"})
+			  req.set_form_data({ 'udid' => params[:udid] , :event => params[:event] , :referal => link_click.app_link.referal})
 			  res = Net::HTTP.start(url.host, url.port) do |http|
 			    http.request req
 			  end

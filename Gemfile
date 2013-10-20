@@ -35,6 +35,7 @@ group :test do
 	gem 'rspec-rails', '~> 2.0'
 	gem 'factory_girl_rails'
 	gem 'mocha'
+	gem 'webmock'
 end
 
 group :production do
