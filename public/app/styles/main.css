@@ -13,6 +13,7 @@ body {
 #left-panel{
     background-color: #fafafa;
     padding-top: 20px;
+    height: 1024px;
 }
 
 #main-content{
