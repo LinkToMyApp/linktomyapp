@@ -25,7 +25,6 @@ class LinkClicksController < ApplicationController
   # POST /link_clicks.json
   def create
     @link_click = LinkClick.new(link_click_params)
-
     respond_to do |format|
       if @link_click.save
         format.html { redirect_to @link_click, notice: 'Link click was successfully created.' }
@@ -69,6 +68,6 @@ class LinkClicksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def link_click_params
-      params.require(:link_click).permit(:app_link_id, :ip_adress, :occurence_counter, :installed)
+      params.require(:link_click).permit(:app_link_id, :ip_adress, :occurence_counter, :installed, :user_agent)
     end
 end

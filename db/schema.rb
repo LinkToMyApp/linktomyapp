@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131019202724) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20131019205858) do
 
   create_table "app_links", force: true do |t|
     t.integer  "mobile_app_id",                      null: false
@@ -41,11 +38,12 @@ ActiveRecord::Schema.define(version: 20131019202724) do
   add_index "link_clicks", ["app_link_id"], name: "index_link_clicks_on_app_link_id", using: :btree
 
   create_table "mobile_apps", force: true do |t|
-    t.string   "name",       null: false
-    t.string   "itunes_url", null: false
-    t.string   "icon_url",   null: false
+    t.string   "name",         null: false
+    t.string   "itunes_url",   null: false
+    t.string   "icon_url",     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "callback_url"
   end
 
 end
