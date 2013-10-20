@@ -19,7 +19,7 @@ puts "Done!"
 5.times do |i|
 	puts "Create App Link ..."
 	rand_click = rand(40)
-	app_link = AppLink.create(:mobile_app_id => mobile_app.id,
+	app_link = AppLink.create!(:mobile_app_id => mobile_app.id,
 		:referal => referals[i],
 		:link_clicks_count => rand_click,
         :installs_count => (rand_click/2).to_i,
@@ -28,11 +28,12 @@ puts "Done!"
 
 	rand_click.times do
 		puts "Create Link click ..."
-		LinkClick.create(:app_link_id => app_link.id,
+		LinkClick.create!(:app_link_id => app_link.id,
 			:ip_adress => Faker::Internet.ip_v4_address,
 			:occurence_counter => rand(3),
 			:installed => [true, false].sample,
-			:created_at => rand_time(7.days.ago))
+			:created_at => rand_time(7.days.ago),
+			:user_agent => "azerty")
 		puts "Done !"
 	end
 end
