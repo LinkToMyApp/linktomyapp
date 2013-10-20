@@ -93,44 +93,47 @@ describe Api::AppLinksController do
 		end
 	end
 
-	describe "app_installed" do
+	describe "event" do
 		before(:each) do
 			@ip_adress = "1.1.1.1"
 	      	@controller.request.stubs(:remote_ip).returns(@ip_adress)
+	      	@callback_url = "http://linktomyapp.herokuapp.com/"
 		end
 
-		let(:mobile_app) { FactoryGirl.create(:mobile_app, :id => 12, :callback_url => "http://linktomyapp.herokuapp.com/") }
+		let(:mobile_app) { FactoryGirl.create(:mobile_app, :id => 12, :callback_url => @callback_url) }
 
-		let(:app_link) { FactoryGirl.create(:app_link, :mobile_app => mobile_app,) }
+		let(:app_link) { FactoryGirl.create(:app_link, :mobile_app => mobile_app, :referal => "a_referal") }
 
 		context "link was clicked" do
 			context "same IP address" do
 				it "returns link click id" do
+					stub_request(:any, @callback_url)
 					FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
 
-					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+					post :event, :app_id => mobile_app.id, :udid => "a_udid", :event => "an_event", :format => :json
 
 					resp = JSON.parse(response.body)
 					resp["link_click_id"].should eq(123)
 				end
 
 				it "updates link click status" do
+					stub_request(:any, @callback_url)
 					link_click = FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
 
-					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+					post :event, :app_id => mobile_app.id, :udid => "a_udid", :event => "an_event", :format => :json
 
 					link_click.reload.installed.should == true
 				end
 
 				context "has a callback_url" do
 					it "sends event to callback url" do
-						@mock_http = mock("http")
-						Net::HTTP.stub!(:start).and_yield @mock_http
-						@mock_http.should_receive(:request).with(an_instance_of(Net::HTTP::Post)).and_return 202
+						stub_request(:post, "http://linktomyapp.herokuapp.com/").to_return(:body => "abc")
 
 						FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
 
-						post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+						post :event, :app_id => mobile_app.id, :udid => "a_udid", :event => "an_event", :format => :json
+
+						WebMock.should have_requested(:post, @callback_url).with(:body => { 'udid' => "a_udid", :event => "an_event", :referal => "a_referal"}).once
 					end
 				end
 				context "dont have a callback_url" do
@@ -139,7 +142,7 @@ describe Api::AppLinksController do
 
 						FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => @ip_adress, :app_link => app_link)
 
-						post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+						post :event, :app_id => mobile_app.id, :udid => "a_udid", :event => "an_event", :format => :json
 					end
 				end
 			end
@@ -149,7 +152,7 @@ describe Api::AppLinksController do
 					SecureRandom.stubs(:hex).returns(321)
 					FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => "2.2.2.2", :app_link => app_link)
 
-					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+					post :event, :app_id => mobile_app.id, :udid => "a_udid", :event => "an_event", :format => :json
 
 					resp = JSON.parse(response.body)
 					resp["link_click_id"].should eq(321)
@@ -158,7 +161,7 @@ describe Api::AppLinksController do
 				it "doesn't update the link click status" do
 					link_click = FactoryGirl.create(:link_click, :id => 123, :installed => false, :ip_adress => "2.2.2.2", :app_link => app_link)
 
-					post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+					post :event, :app_id => mobile_app.id, :udid => "a_udid", :event => "an_event", :format => :json
 
 					link_click.reload.installed.should == false
 				end
@@ -169,7 +172,7 @@ describe Api::AppLinksController do
 			it "returns random unique id" do
 				SecureRandom.stubs(:hex).returns(321)
 
-				post :app_installed, :app_id => mobile_app.id, :udid => "a_udid", :format => :json
+				post :event, :app_id => mobile_app.id, :udid => "a_udid", :event => "an_event", :format => :json
 
 				resp = JSON.parse(response.body)
 				resp["link_click_id"].should eq(321)

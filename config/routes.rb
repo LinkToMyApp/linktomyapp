@@ -6,7 +6,7 @@ Linktomyapp::Application.routes.draw do
     resources :app_links do
       collection do
         get :clicks
-        post :app_installed
+        post :event
       end
     end
   end
