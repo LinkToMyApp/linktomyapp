@@ -156,7 +156,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     //TODO : Make a Service for Http calls
         function updateReferrers(){
             console.log("update");
-            $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links'}).
+            $http({method: 'GET', url: 'http://'+window.location.host+'/api/app_links'}).
                 success(function(data, status, headers, config) {
 
             $scope.referers = data;
@@ -200,7 +200,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
                 $("#graph").css("visibility","visible");
             }
 
-            var url = 'http://linktomyapp.herokuapp.com/api/app_links/clicks'+params;
+            var url = 'http://'+window.location.host+'/api/app_links/clicks'+params;
             console.log(url);
             $http({method: 'GET', url:url}).
               success(function(data, status, headers, config) {
