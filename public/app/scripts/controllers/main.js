@@ -5,7 +5,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     $scope.chartReady = function (){
 
     };
-
+    //TODO : Make a Service for Graph creation
     function createTableData(){
 
         var tableData = {
@@ -153,7 +153,7 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     
 
     /**************************** Data **************************/
-
+    //TODO : Make a Service for Http calls
         function updateReferrers(){
             console.log("update");
             $http({method: 'GET', url: 'http://linktomyapp.herokuapp.com/api/app_links'}).
@@ -180,10 +180,10 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
             callGraph();
 
         });
-
+    //TODO : Make a Service for Http calls
     function callGraph(){
-        //todo : call avec parametres.
-        var params = "?";
+
+            var params = "?";
             for (var i = $scope.ref.length - 1; i >= 0; i--) {
                 var refName = $scope.ref[i];
                 params += "referals[]="+refName;
@@ -191,6 +191,15 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
                     params += "&"
                 };
             };
+
+            //TODO : make ng-hide work
+            if ($scope.ref.length == 0) {
+                $("#graph").css("visibility","hidden");
+            }
+            else{
+                $("#graph").css("visibility","visible");
+            }
+
             var url = 'http://linktomyapp.herokuapp.com/api/app_links/clicks'+params;
             console.log(url);
             $http({method: 'GET', url:url}).
@@ -207,8 +216,6 @@ angular.module('linkToMyApp').controller('MainCtrl', function ($scope, $http) {
     $scope.ref = [];
 
     $scope.change = function(index){
-
-        console.log(index);
 
         if($("#check_"+index).is(':checked')){
             $scope.ref.push($scope.referers[index].referal);

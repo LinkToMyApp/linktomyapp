@@ -16,7 +16,11 @@
             <input ng-change="change($index)" ng-model="reference" class="right" id="check_{{$index}}" type="checkbox" name="reference" value="{{referer.referal}}">
         </span>
         </div>
-        <div google-chart class="left" chart="graph" style="{{chart.cssStyle}}" on-ready="chartReady()" />
+
+        <div id="graph" style="visibility:hidden;">
+            <div google-chart class="left" chart="graph" style="{{chart.cssStyle}}" on-ready="chartReady()" />
+        </div>
+        
     </div>
 </div>
 
